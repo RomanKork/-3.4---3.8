@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,18 +9,25 @@ namespace лаба_3._4___3._8
 {
     public static class FileTasks
     {
-        // Задание 4: Заполнить бинарный файл случайными числами и найти наибольший модуль элемента с нечетным индексом
-        public static void GenerateBinaryFileWithNumbers(string filePath, int count)
+        public static void GenerateBinaryFileWithRandomNumbers(string filePath, int count)
         {
             var random = new Random();
+            var numbers = new List<int>(); 
+
             using (var writer = new BinaryWriter(File.Open(filePath, FileMode.Create)))
             {
                 for (int i = 0; i < count; i++)
                 {
-                    writer.Write(random.Next(-100, 100));
+                    int number = random.Next(-100, 101);
+                    numbers.Add(number);  
+                    writer.Write(number);
                 }
             }
+
+            Console.WriteLine("Сгенерированные числа:");
+            Console.WriteLine(string.Join(", ", numbers));
         }
+
 
         public static int FindMaxOddIndexAbsoluteValue(string filePath)
         {
@@ -40,40 +47,6 @@ namespace лаба_3._4___3._8
             }
             return maxAbsValue;
         }
-
-        // Задание 5: Структура "Игрушка" и бинарный файл с XML-сериализацией
-        public struct Toy
-        {
-            public string Name;
-            public int Price;
-            public int MinAge;
-            public int MaxAge;
-        }
-
-        public static void GenerateBinaryFileWithToys(string filePath, List<Toy> toys)
-        {
-            var serializer = new XmlSerializer(typeof(List<Toy>));
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                serializer.Serialize(stream, toys);
-            }
-        }
-
-        public static List<string> GetToysForAgeRange(string filePath, int minAge, int maxAge)
-        {
-            var result = new List<string>();
-            var serializer = new XmlSerializer(typeof(List<Toy>));
-
-            using (var stream = new FileStream(filePath, FileMode.Open))
-            {
-                var toys = (List<Toy>)serializer.Deserialize(stream);
-                result.AddRange(toys.Where(toy => toy.MinAge <= maxAge && toy.MaxAge >= minAge)
-                                    .Select(toy => toy.Name));
-            }
-            return result;
-        }
-
-        // Задание 6: Найти среднее арифметическое чисел в текстовом файле
         public static void GenerateTextFileWithNumbers(string filePath, int count)
         {
             var random = new Random();
@@ -92,7 +65,6 @@ namespace лаба_3._4___3._8
             return numbers.Average();
         }
 
-        // Задание 7: Найти произведение нечетных чисел в текстовом файле
         public static void GenerateTextFileWithMultipleNumbersPerLine(string filePath, int lines, int numbersPerLine)
         {
             var random = new Random();
@@ -128,7 +100,6 @@ namespace лаба_3._4___3._8
             return product;
         }
 
-        // Задание 8: Переписать строки без букв в другой файл
         public static void CopyLinesWithoutLetters(string inputFilePath, string outputFilePath)
         {
             using (var reader = new StreamReader(inputFilePath))
